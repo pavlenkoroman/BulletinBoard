@@ -12,11 +12,11 @@ public class BulletinTests
         int number,
         Guid userId,
         string text,
-        Uri uri,
+        Photo photo,
         DateTime expirationDate)
     {
         // Arrange & act
-        var bulletin = Bulletin.Create(number, userId, text, uri, expirationDate);
+        var bulletin = Bulletin.Create(number, userId, text, photo, expirationDate);
 
         // Assertion
         bulletin.Should().NotBeNull();
@@ -24,7 +24,7 @@ public class BulletinTests
         bulletin.Number.Should().Be(number);
         bulletin.UserId.Should().Be(userId);
         bulletin.Text.Should().Be(text);
-        bulletin.Image.Should().Be(uri);
+        bulletin.Photo.Should().Be(photo);
         bulletin.Rating.Should().Be(0);
         bulletin.CreatedDate.Should().NotBe(default);
         bulletin.ExpirationDate.Should().Be(expirationDate);
@@ -37,13 +37,13 @@ public class BulletinTests
         int number,
         Guid userId,
         string text,
-        Uri image,
+        Photo photo,
         int rating,
         DateTime createdDate,
         DateTime expirationDate)
     {
         // Arrange & Act
-        var action = () => new Bulletin(id, number, userId, text, image, rating, createdDate, expirationDate);
+        var action = () => new Bulletin(id, number, userId, text, photo, rating, createdDate, expirationDate);
 
         // Assert
         action.Should().Throw<ArgumentOutOfRangeException>();
@@ -55,18 +55,23 @@ public class BulletinTests
         int number,
         Guid userId,
         string text,
-        Uri uri,
+        Photo photo,
         DateTime expirationDate)
     {
         // Arrange
-        var bulletin = Bulletin.Create(number, userId, text, uri, expirationDate);
-        var updateImage = new Uri("https://example2.com");
+        var bulletin = Bulletin.Create(number, userId, text, photo, expirationDate);
+        var updateImage = new Photo(
+            Guid.NewGuid(),
+            "/a",
+            new Uri("https://example2.com"),
+            "/a_r",
+            new Uri("https://resized2.com"));
 
         // Act
-        bulletin.UpdateImage(updateImage);
+        bulletin.UpdatePhoto(updateImage);
 
         // Assert
-        bulletin.Image.Should().Be(updateImage);
+        bulletin.Photo.Should().Be(updateImage);
     }
 
     [Theory]
@@ -75,11 +80,11 @@ public class BulletinTests
         int number,
         Guid userId,
         string text,
-        Uri uri,
+        Photo photo,
         DateTime expirationDate)
     {
         // Arrange
-        var bulletin = Bulletin.Create(number, userId, text, uri, expirationDate);
+        var bulletin = Bulletin.Create(number, userId, text, photo, expirationDate);
 
         var updateText = new string('a', 55);
 

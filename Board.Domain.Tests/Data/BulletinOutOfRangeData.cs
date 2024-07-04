@@ -2,66 +2,72 @@
 
 namespace Board.Domain.Tests.Data;
 
-internal class BulletinOutOfRangeData : TheoryData<Guid, int, Guid, string, Uri, int, DateTime, DateTime>
+internal class BulletinOutOfRangeData : TheoryData<Guid, int, Guid, string, Photo, int, DateTime, DateTime>
 {
     public BulletinOutOfRangeData()
     {
-        Add(Guid.Empty, 
-            0, 
-            Guid.NewGuid(), 
-            new string('a', 50), 
-            new Uri("https://example.com/a.jpg"), 
-            0, 
-            DateTime.UtcNow, 
+        var photo = new Photo(
+            Guid.NewGuid(),
+            "/a",
+            new Uri("https://example.com"),
+            "/a_r",
+            new Uri("https://resized.com"));
+
+        Add(Guid.Empty,
+            0,
+            Guid.NewGuid(),
+            new string('a', 50),
+            photo,
+            0,
+            DateTime.UtcNow,
             DateTime.UtcNow.AddDays(1));
         Add(Guid.NewGuid(),
             0,
             Guid.Empty,
             new string('a', 50),
-            new Uri("https://example.com/a.jpg"),
+            photo,
             0,
             DateTime.UtcNow,
             DateTime.UtcNow.AddDays(1));
-        Add(Guid.NewGuid(), 
-            0, 
-            Guid.NewGuid(), 
+        Add(Guid.NewGuid(),
+            0,
+            Guid.NewGuid(),
             new string('a', 49),
-            new Uri("https://example.com/a.jpg"), 
-            0, 
-            DateTime.UtcNow, 
+            photo,
+            0,
+            DateTime.UtcNow,
             DateTime.UtcNow.AddDays(1));
-        Add(Guid.NewGuid(), 
-            0, 
-            Guid.Empty, 
+        Add(Guid.NewGuid(),
+            0,
+            Guid.Empty,
             new string('a', 1001),
-            new Uri("https://example.com/a.jpg"), 
-            0, 
-            DateTime.UtcNow, 
+            photo,
+            0,
+            DateTime.UtcNow,
             DateTime.UtcNow.AddDays(1));
-        Add(Guid.NewGuid(), 
-            0, 
-            Guid.NewGuid(), 
+        Add(Guid.NewGuid(),
+            0,
+            Guid.NewGuid(),
             new string('a', 50),
-            new Uri("https://example.com/a.jpg"), 
-            0, 
-            new DateTime(), 
+            photo,
+            0,
+            new DateTime(),
             DateTime.UtcNow);
-        Add(Guid.NewGuid(), 
-            0, 
-            Guid.NewGuid(), 
+        Add(Guid.NewGuid(),
+            0,
+            Guid.NewGuid(),
             new string('a', 51),
-            new Uri("https://example.com/a.jpg"), 
-            0, 
-            DateTime.UtcNow, 
+            photo,
+            0,
+            DateTime.UtcNow,
             new DateTime());
-        Add(Guid.NewGuid(), 
-            0, 
-            Guid.NewGuid(), 
+        Add(Guid.NewGuid(),
+            0,
+            Guid.NewGuid(),
             new string('a', 50),
-            new Uri("https://example.com/a.jpg"), 
-            0, 
-            DateTime.UtcNow, 
+            photo,
+            0,
+            DateTime.UtcNow,
             DateTime.UtcNow.AddDays(-1));
     }
 }
-

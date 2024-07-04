@@ -6,7 +6,7 @@ public sealed class Bulletin
     public int Number { get; private init; }
     public Guid UserId { get; private init; }
     public string Text { get; private set; }
-    public Uri Image { get; private set; }
+    public Photo Photo { get; private set; }
     public int Rating { get; private set; }
     public DateTime CreatedDate { get; private init; }
     public DateTime ExpirationDate { get; private init; }
@@ -16,7 +16,7 @@ public sealed class Bulletin
         int number,
         Guid userId,
         string text,
-        Uri image,
+        Photo photo,
         int rating,
         DateTime createdDate,
         DateTime expirationDate)
@@ -30,7 +30,7 @@ public sealed class Bulletin
         if (expirationDate <= createdDate)
         {
             throw new ArgumentOutOfRangeException(
-                nameof(expirationDate), 
+                nameof(expirationDate),
                 "Expiration date cannot be less or equal created date");
         }
 
@@ -38,20 +38,24 @@ public sealed class Bulletin
         Number = number;
         UserId = userId;
         Text = text;
-        Image = image;
+        Photo = photo;
         Rating = rating;
         CreatedDate = createdDate;
         ExpirationDate = expirationDate;
     }
 
-    public static Bulletin Create(int number, Guid userId, string text, Uri image, DateTime expirationDate)
+    private Bulletin()
+    {
+    }
+
+    public static Bulletin Create(int number, Guid userId, string text, Photo photo, DateTime expirationDate)
     {
         return new Bulletin(
             Guid.NewGuid(),
             number,
             userId,
             text,
-            image,
+            photo,
             0,
             DateTime.UtcNow,
             expirationDate);
@@ -63,9 +67,9 @@ public sealed class Bulletin
         Text = text;
     }
 
-    public void UpdateImage(Uri image)
+    public void UpdatePhoto(Photo photo)
     {
-        Image = image;
+        Photo = photo;
     }
 
     private void ValidateText(string text)
@@ -73,5 +77,10 @@ public sealed class Bulletin
         ArgumentException.ThrowIfNullOrEmpty(text);
         ArgumentOutOfRangeException.ThrowIfLessThan(text.Length, 50);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(text.Length, 1000);
+    }
+
+    public void UpdateRating(int points)
+    {
+        Rating += points;
     }
 }
