@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Board.Contract\Board.Contract.csproj" />
+      <ProjectReference Include="..\Board.Infrastructure\Board.Infrastructure.csproj" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Uploads\Original\" />
+      <Folder Include="Uploads\Resized\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Uploads\Resized\istockphoto-825383494-612x612_242c76f2-4701-44ed-891e-76f208146a57.jpg" />
+      <None Remove="Uploads\Resized\istockphoto-825383494-612x612_edde2ec3-f4f8-49ab-bc40-8f0b73e592e8.jpg" />
+      <None Remove="Uploads\Resized\istockphoto-825383494-612x612_d556c5c5-421f-40b9-a496-8371d38cd57e.jpg" />
+      <None Remove="Uploads\Resized\istockphoto-825383494-612x612_9457d206-3b2a-4b29-be5e-8d089b75c59a.jpg" />
+      <None Remove="Uploads\Resized\istockphoto-825383494-612x612_484fde3f-afec-4208-ab86-d5dc173dee3b.jpg" />
+      <None Remove="Uploads\Resized\istockphoto-825383494-612x612_47792786-71d7-44ac-9432-ec42984f4767.jpg" />
+      <None Remove="Uploads\Resized\istockphoto-825383494-612x612_00aa9e57-8586-4b2b-9459-67d3735be3a9.jpg" />
+      <None Remove="Uploads\Original\istockphoto-825383494-612x612_fa9bf0b6-4a96-4787-b9ff-08f92cbb6e4d.jpg" />
+      <None Remove="Uploads\Original\istockphoto-825383494-612x612_7b4b663c-1468-46a7-97d2-7f97669cec11.jpg" />
+      <None Remove="Uploads\Original\istockphoto-825383494-612x612_22ef5491-f659-46fe-944d-72f4dcdfdfcd.jpg" />
+      <None Remove="Uploads\Original\istockphoto-825383494-612x612_1d4bc1e5-ef00-4164-9b04-7412b4149933.jpg" />
+      <None Remove="Uploads\Original\istockphoto-825383494-612x612_1b49729e-710b-459d-b2b7-09a8134740f4.jpg" />
+      <None Remove="Uploads\Original\istockphoto-825383494-612x612_0297a71e-fca7-4494-b34c-54a2575a629e.jpg" />
+    </ItemGroup>
+
+</Project>
