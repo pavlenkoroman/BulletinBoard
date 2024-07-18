@@ -75,7 +75,6 @@ public sealed class BulletinsController(IMediator mediator) : BaseV1Controller(m
                 bulletin.UserId,
                 bulletin.Text,
                 new PhotoResponse(
-                    bulletin.Photo.Id,
                     bulletin.Photo.OriginalUrl,
                     bulletin.Photo.ResizedUrl),
                 bulletin.Rating,
