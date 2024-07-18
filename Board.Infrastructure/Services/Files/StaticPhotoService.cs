@@ -34,17 +34,19 @@ public sealed class StaticPhotoService : IPhotoService
         return Photo.Create(relativePath, absolutePathToFile, resized.relativePath, resized.absolutePath);
     }
 
-    public async Task DeleteFile(Photo photo, CancellationToken cancellationToken)
+    public Task DeleteFile(Photo photo, CancellationToken cancellationToken)
     {
         if (File.Exists(photo.OriginalRelativePath))
         {
-            await Task.Run(() => File.Delete(photo.OriginalRelativePath), cancellationToken);
+            File.Delete(photo.OriginalRelativePath);
         }
 
         if (File.Exists(photo.ResizedRelationalPath))
         {
-            await Task.Run(() => File.Delete(photo.ResizedRelationalPath), cancellationToken);
+            File.Delete(photo.ResizedRelationalPath);
         }
+
+        return Task.CompletedTask;
     }
 
     private (string relativePath, Uri absolutePath) UploadResizedImage(UploadFile file)
