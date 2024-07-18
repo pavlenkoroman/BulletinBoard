@@ -22,6 +22,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired();
 
         builder
+            .HasIndex(user => user.Name);
+
+        builder
+            .HasIndex(user => user.IsAdmin);
+
+        builder
             .ToTable("users");
     }
 }

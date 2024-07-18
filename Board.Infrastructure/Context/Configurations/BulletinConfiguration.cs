@@ -27,6 +27,24 @@ public class BulletinConfiguration : IEntityTypeConfiguration<Bulletin>
             .HasColumnType("jsonb");
 
         builder
+            .HasIndex(bulletin => bulletin.Number);
+
+        builder
+            .HasIndex(bulletin => bulletin.UserId);
+
+        builder
+            .HasIndex(bulletin => bulletin.CreatedDate);
+
+        builder
+            .HasIndex(b => b.ExpirationDate);
+
+        builder
+            .HasIndex(b => b.Text);
+
+        builder
+            .HasIndex(b => b.Rating);
+
+        builder
             .ToTable("bulletins");
     }
 }
