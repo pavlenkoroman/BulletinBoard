@@ -48,7 +48,7 @@ public sealed class Bulletin
     {
     }
 
-    public static Bulletin Create(int number, Guid userId, string text, Photo photo, DateTime expirationDate)
+    public static Bulletin Create(int number, Guid userId, string text, Photo photo, int expirationDays)
     {
         return new Bulletin(
             Guid.NewGuid(),
@@ -58,7 +58,7 @@ public sealed class Bulletin
             photo,
             0,
             DateTime.UtcNow,
-            expirationDate);
+            DateTime.UtcNow.AddDays(expirationDays));
     }
 
     public void UpdateText(string text)

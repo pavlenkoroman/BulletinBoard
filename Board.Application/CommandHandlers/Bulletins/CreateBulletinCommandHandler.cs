@@ -33,7 +33,7 @@ public class CreateBulletinCommandHandler : IRequestHandler<CreateBulletinComman
         var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
 
         var filePath = await _photoService.UploadFile(request.File, cancellationToken);
-        
+
         var currentUserBulletins = await unitOfWork.Bulletins.GetCountByUserId(request.UserId, cancellationToken);
 
         if (currentUserBulletins == _boardOption.MaxBulletinsPerUser)
@@ -41,7 +41,7 @@ public class CreateBulletinCommandHandler : IRequestHandler<CreateBulletinComman
             throw LimitException.CreateByUserId(request.UserId);
         }
 
-        var bulletin = Bulletin.Create(0, request.UserId, request.Text, filePath, request.ExpirationDate);
+        var bulletin = Bulletin.Create(0, request.UserId, request.Text, filePath, _boardOption.BulletinsExpirationDays);
 
         await unitOfWork.Bulletins.Create(bulletin, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);

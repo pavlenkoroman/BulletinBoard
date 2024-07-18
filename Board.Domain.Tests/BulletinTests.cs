@@ -13,10 +13,10 @@ public class BulletinTests
         Guid userId,
         string text,
         Photo photo,
-        DateTime expirationDate)
+        int expirationDays)
     {
         // Arrange & act
-        var bulletin = Bulletin.Create(number, userId, text, photo, expirationDate);
+        var bulletin = Bulletin.Create(number, userId, text, photo, expirationDays);
 
         // Assertion
         bulletin.Should().NotBeNull();
@@ -27,7 +27,9 @@ public class BulletinTests
         bulletin.Photo.Should().Be(photo);
         bulletin.Rating.Should().Be(0);
         bulletin.CreatedDate.Should().NotBe(default);
-        bulletin.ExpirationDate.Should().Be(expirationDate);
+        bulletin.ExpirationDate.Year.Should().Be(bulletin.CreatedDate.AddDays(expirationDays).Year);
+        bulletin.ExpirationDate.Month.Should().Be(bulletin.CreatedDate.AddDays(expirationDays).Month);
+        bulletin.ExpirationDate.Day.Should().Be(bulletin.CreatedDate.AddDays(expirationDays).Day);
     }
 
     [Theory]
@@ -56,10 +58,10 @@ public class BulletinTests
         Guid userId,
         string text,
         Photo photo,
-        DateTime expirationDate)
+        int expirationDays)
     {
         // Arrange
-        var bulletin = Bulletin.Create(number, userId, text, photo, expirationDate);
+        var bulletin = Bulletin.Create(number, userId, text, photo, expirationDays);
         var updateImage = new Photo(
             Guid.NewGuid(),
             "/a",
@@ -81,10 +83,10 @@ public class BulletinTests
         Guid userId,
         string text,
         Photo photo,
-        DateTime expirationDate)
+        int expirationDays)
     {
         // Arrange
-        var bulletin = Bulletin.Create(number, userId, text, photo, expirationDate);
+        var bulletin = Bulletin.Create(number, userId, text, photo, expirationDays);
 
         var updateText = new string('a', 55);
 
