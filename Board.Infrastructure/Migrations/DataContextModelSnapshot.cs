@@ -67,6 +67,21 @@ namespace Board.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_bulletins");
 
+                    b.HasIndex("CreatedDate")
+                        .HasDatabaseName("ix_bulletins_created_date");
+
+                    b.HasIndex("ExpirationDate")
+                        .HasDatabaseName("ix_bulletins_expiration_date");
+
+                    b.HasIndex("Number")
+                        .HasDatabaseName("ix_bulletins_number");
+
+                    b.HasIndex("Rating")
+                        .HasDatabaseName("ix_bulletins_rating");
+
+                    b.HasIndex("Text")
+                        .HasDatabaseName("ix_bulletins_text");
+
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_bulletins_user_id");
 
@@ -119,6 +134,12 @@ namespace Board.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_users");
+
+                    b.HasIndex("IsAdmin")
+                        .HasDatabaseName("ix_users_is_admin");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("ix_users_name");
 
                     b.ToTable("users", (string)null);
                 });
