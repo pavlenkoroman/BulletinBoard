@@ -1,5 +1,6 @@
 ﻿using Board.Application.Exceptions;
 using Board.Application.Models.Search;
+using Board.Application.Models.Users;
 using Board.Application.Models.Users.Queries;
 using Board.Application.Repositories;
 using Board.Domain;
@@ -54,6 +55,21 @@ public class UserRepository : IUserRepository
             queryable = queryable.Where(user => user.IsAdmin == query.IsAdmin);
         }
 
-        return await queryable.GetPagedAsync(query.Page, cancellationToken);
+        queryable = SortUsers(queryable, query.SortBy);
+
+        var usersCount = await queryable.CountAsync(cancellationToken);
+
+        return await queryable.GetPagedAsync(query.Page, usersCount, cancellationToken);
+    }
+
+    private static IQueryable<User> SortUsers(IQueryable<User> users, UserSortBy? sortBy)
+    {
+        return sortBy switch
+        {
+            UserSortBy.Name => users.OrderBy(user => user.Name),
+            UserSortBy.IsAdmin => users.OrderBy(user => user.IsAdmin),
+            null => users,
+            _ => throw new ArgumentOutOfRangeException(nameof(sortBy), sortBy, "Unexpected enum value")
+        };
     }
 }

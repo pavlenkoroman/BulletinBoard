@@ -1,4 +1,5 @@
 ﻿using Board.Application.Exceptions;
+using Board.Application.Models.Bulletins;
 using Board.Application.Models.Bulletins.Queries;
 using Board.Application.Models.Search;
 using Board.Application.Repositories;
@@ -128,6 +129,27 @@ public class BulletinRepository : IBulletinRepository
             }
         }
 
-        return await queryable.GetPagedAsync(query.Page, cancellationToken);
+        queryable = SortBulletins(queryable, query.SortBy);
+
+        var bulletinsCounter = await queryable.CountAsync(cancellationToken);
+
+        return await queryable.GetPagedAsync(query.Page, bulletinsCounter, cancellationToken);
+    }
+
+
+    private static IQueryable<Bulletin> SortBulletins(IQueryable<Bulletin> bulletins, BulletinSortBy? sortBy)
+    {
+        return sortBy switch
+        {
+            BulletinSortBy.Number => bulletins.OrderBy(bulletin => bulletin.Number),
+            BulletinSortBy.Text => bulletins.OrderBy(bulletin => bulletin.Text),
+            BulletinSortBy.Rating => bulletins.OrderBy(bulletin => bulletin.Rating),
+            BulletinSortBy.CreatedDateAscending => bulletins.OrderBy(bulletin => bulletin.CreatedDate),
+            BulletinSortBy.ExpirationDateAscending => bulletins.OrderBy(bulletin => bulletin.ExpirationDate),
+            BulletinSortBy.CreatedDateDescending => bulletins.OrderByDescending(bulletin => bulletin.CreatedDate),
+            BulletinSortBy.ExpirationDateDescending => bulletins.OrderByDescending(bulletin => bulletin.ExpirationDate),
+            null => bulletins,
+            _ => throw new ArgumentOutOfRangeException(nameof(sortBy), sortBy, "Unexpected enum value")
+        };
     }
 }

@@ -6,6 +6,7 @@ using Board.Application.Services.Files.Models;
 using Board.Contract.Requests.Bulletin;
 using Board.Contract.Responses;
 using Board.Contract.Responses.Bulletin;
+using Board.Contract.Transfers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -97,6 +98,7 @@ public sealed class BulletinsController(IMediator mediator) : BaseV1Controller(m
         [FromQuery] DateTime? createdDateEnd,
         [FromQuery] DateTime? expirationDateStart,
         [FromQuery] DateTime? expirationDateEnd,
+        [FromQuery] BulletinSortByTransfer? sortBy,
         [FromQuery] int page = 0,
         [FromQuery] int pageSize = 10,
         CancellationToken cancellationToken = default)
@@ -108,14 +110,23 @@ public sealed class BulletinsController(IMediator mediator) : BaseV1Controller(m
             userId,
             new IntegerRange(ratingRangeStart, ratingRangeEnd),
             new DateTimeRange(createdDateStart, createdDateEnd),
-            new DateTimeRange(expirationDateStart, expirationDateEnd));
+            new DateTimeRange(expirationDateStart, expirationDateEnd),
+            sortBy switch {
+                BulletinSortByTransfer.Number => BulletinSortBy.Number,
+                BulletinSortByTransfer.Text => BulletinSortBy.Text,
+                BulletinSortByTransfer.Rating => BulletinSortBy.Rating,
+                BulletinSortByTransfer.CreatedDateAscending => BulletinSortBy.CreatedDateAscending,
+                BulletinSortByTransfer.ExpirationDateAscending => BulletinSortBy.ExpirationDateAscending,
+                BulletinSortByTransfer.CreatedDateDescending => BulletinSortBy.CreatedDateDescending,
+                BulletinSortByTransfer.ExpirationDateDescending => BulletinSortBy.ExpirationDateDescending,
+                null => null,
+                _ => throw new ArgumentOutOfRangeException(nameof(sortBy), sortBy, "Unexpected enum value")
+            });
 
         var queryResult = await Mediator.Send(queryModel, cancellationToken).ConfigureAwait(false);
 
         var response = new SearchResponse<BulletinResponse>
         {
-            CurrentPage = page,
-            PageSize = pageSize,
             Results = queryResult.Results.Select(x =>
                     new BulletinResponse(
                         x.Id,
@@ -128,7 +139,8 @@ public sealed class BulletinsController(IMediator mediator) : BaseV1Controller(m
                         x.Rating,
                         x.CreatedDate,
                         x.ExpirationDate))
-                .ToArray()
+                .ToArray(),
+            Count = queryResult.Count
         };
 
         return Ok(response);

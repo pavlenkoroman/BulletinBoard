@@ -11,7 +11,7 @@ public sealed record SearchBulletinQuery : BaseSearchRequest, IRequest<SearchRes
     public IntegerRange? RatingRange { get; private init; }
     public DateTimeRange? CreatedDateRange { get; private init; }
     public DateTimeRange? ExpirationDateRange { get; private init; }
-
+    public BulletinSortBy? SortBy { get; private init; }
     public SearchBulletinQuery(
         Page page,
         string? query,
@@ -19,7 +19,8 @@ public sealed record SearchBulletinQuery : BaseSearchRequest, IRequest<SearchRes
         Guid? userId,
         IntegerRange? ratingRange,
         DateTimeRange? createdDateRange,
-        DateTimeRange? expirationDateRange)
+        DateTimeRange? expirationDateRange,
+        BulletinSortBy? sortBy)
         : base(page, query)
     {
         NumberRange = numberRange;
@@ -27,5 +28,6 @@ public sealed record SearchBulletinQuery : BaseSearchRequest, IRequest<SearchRes
         RatingRange = ratingRange;
         CreatedDateRange = createdDateRange;
         ExpirationDateRange = expirationDateRange;
+        SortBy = sortBy;
     }
 }

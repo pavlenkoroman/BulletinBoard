@@ -8,6 +8,7 @@ public static class QueryablePagedExtension
     public static async Task<SearchResult<T>> GetPagedAsync<T>(
         this IQueryable<T> query,
         Page page,
+        int count,
         CancellationToken cancellationToken = default)
         where T : class
     {
@@ -22,9 +23,6 @@ public static class QueryablePagedExtension
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        return new SearchResult<T>(
-            page.PageNumber,
-            page.PageSize,
-            results);
+        return new SearchResult<T>(results, count);
     }
 }

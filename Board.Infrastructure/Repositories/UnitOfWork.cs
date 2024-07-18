@@ -19,6 +19,7 @@ public class UnitOfWork : IUnitOfWork
         ArgumentNullException.ThrowIfNull(dbContext);
 
         _dbContext = dbContext;
+
         Users = new UserRepository(_dbContext);
         Bulletins = new BulletinRepository(_dbContext, new RatingRepository(_dbContext));
     }

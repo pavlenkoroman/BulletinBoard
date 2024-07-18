@@ -2,16 +2,15 @@
 
 public class SearchResult<T>
 {
-    public int CurrentPage { get; }
-    public int PageSize { get; }
     public IReadOnlyCollection<T> Results { get; }
+    public int Count { get; }
 
-    public SearchResult(int currentPage, int pageSize, IReadOnlyCollection<T> results)
+
+    public SearchResult(IReadOnlyCollection<T> results, int count)
     {
         ArgumentNullException.ThrowIfNull(results);
 
-        CurrentPage = currentPage;
-        PageSize = pageSize;
         Results = results;
+        Count = count;
     }
 }

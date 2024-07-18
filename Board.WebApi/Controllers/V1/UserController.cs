@@ -1,9 +1,11 @@
 ﻿using Board.Application.Models.Search;
+using Board.Application.Models.Users;
 using Board.Application.Models.Users.Commands;
 using Board.Application.Models.Users.Queries;
 using Board.Contract.Requests.User;
 using Board.Contract.Responses;
 using Board.Contract.Responses.User;
+using Board.Contract.Transfers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,18 +62,29 @@ public class UsersController(IMediator mediator) : BaseV1Controller(mediator)
     public async Task<ActionResult<SearchResponse<UserResponse>>> Get(
         [FromQuery] string? query,
         [FromQuery] bool? isAdmin,
+        [FromQuery] UserSortByTransfer? sortBy,
         [FromQuery] int page = 0,
         [FromQuery] int pageSize = 10,
         CancellationToken cancellationToken = default)
     {
-        var queryModel = new SearchUserQuery(new Page(page, pageSize), query, isAdmin);
-        var queryResult = await Mediator.Send(queryModel, cancellationToken).ConfigureAwait(false);
+        var queryModel = new SearchUserQuery(
+            new Page(page, pageSize),
+            query,
+            isAdmin,
+            sortBy switch
+            {
+                UserSortByTransfer.Name => UserSortBy.Name,
+                UserSortByTransfer.IsAdmin => UserSortBy.IsAdmin,
+                null => null,
+                _ => throw new ArgumentOutOfRangeException(nameof(sortBy), sortBy, "Unexpected enum value")
+            });
+
+        var searchResult = await Mediator.Send(queryModel, cancellationToken).ConfigureAwait(false);
 
         var response = new SearchResponse<UserResponse>
         {
-            CurrentPage = page,
-            PageSize = pageSize,
-            Results = queryResult.Results.Select(x => new UserResponse(x.Id, x.Name, x.IsAdmin)).ToList(),
+            Results = searchResult.Results.Select(x => new UserResponse(x.Id, x.Name, x.IsAdmin)).ToList(),
+            Count = searchResult.Count
         };
 
         return Ok(response);
