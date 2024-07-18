@@ -63,7 +63,6 @@ public class BulletinTests
         // Arrange
         var bulletin = Bulletin.Create(number, userId, text, photo, expirationDays);
         var updateImage = new Photo(
-            Guid.NewGuid(),
             "/a",
             new Uri("https://example2.com"),
             "/a_r",

@@ -3,4 +3,4 @@
 namespace Board.Contract.Responses.Bulletin;
 
 [DataContract]
-public record PhotoResponse(Guid Id, Uri OriginalUrl, Uri ResizedUrl);
+public record PhotoResponse(Uri OriginalUrl, Uri ResizedUrl);

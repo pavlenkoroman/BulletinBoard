@@ -7,7 +7,6 @@ internal class BulletinOutOfRangeData : TheoryData<Guid, int, Guid, string, Phot
     public BulletinOutOfRangeData()
     {
         var photo = new Photo(
-            Guid.NewGuid(),
             "/a",
             new Uri("https://example.com"),
             "/a_r",

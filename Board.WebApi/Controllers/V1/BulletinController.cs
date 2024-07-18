@@ -23,8 +23,7 @@ public sealed class BulletinsController(IMediator mediator) : BaseV1Controller(m
         var command = new CreateBulletinCommand(
             request.UserId,
             request.Text,
-            new UploadFile(photo.FileName, photo.ContentType, photo.Length, photo.OpenReadStream()),
-            request.ExpirationDate);
+            new UploadFile(photo.FileName, photo.ContentType, photo.Length, photo.OpenReadStream()));
 
         var userId = await Mediator.Send(command, cancellationToken).ConfigureAwait(false);
         return new ObjectResult(new IdResponse(userId)) { StatusCode = StatusCodes.Status201Created };
@@ -125,7 +124,6 @@ public sealed class BulletinsController(IMediator mediator) : BaseV1Controller(m
                         x.UserId,
                         x.Text,
                         new PhotoResponse(
-                            x.Photo.Id,
                             x.Photo.OriginalUrl,
                             x.Photo.ResizedUrl),
                         x.Rating,

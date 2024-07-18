@@ -7,7 +7,6 @@ public class BulletinValidData : TheoryData<int, Guid, string, Photo, int>
     public BulletinValidData()
     {
         var photo = new Photo(
-            Guid.NewGuid(), 
             "/a", 
             new Uri("https://example.com"), 
             "/a_r",
