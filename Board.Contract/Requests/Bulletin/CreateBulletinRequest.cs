@@ -3,4 +3,4 @@
 namespace Board.Contract.Requests.Bulletin;
 
 [DataContract]
-public sealed record CreateBulletinRequest(Guid UserId, string Text, DateTime ExpirationDate);
+public sealed record CreateBulletinRequest(Guid UserId, string Text);
