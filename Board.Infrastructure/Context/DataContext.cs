@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Board.Domain;
-using Board.Infrastructure.Context.Converters;
 using Microsoft.EntityFrameworkCore;
 
 namespace Board.Infrastructure.Context;
@@ -20,10 +19,6 @@ public class DataContext : DbContext
         ArgumentNullException.ThrowIfNull(configurationBuilder);
 
         base.ConfigureConventions(configurationBuilder);
-
-        configurationBuilder
-            .Properties<DateTime>()
-            .HaveConversion<DateTimeValueConverter>();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

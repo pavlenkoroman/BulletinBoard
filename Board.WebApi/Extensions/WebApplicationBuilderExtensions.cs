@@ -31,7 +31,8 @@ internal static class WebApplicationBuilderExtensions
                     providerOptions => providerOptions.EnableRetryOnFailure());
 
                 options.UseSnakeCaseNamingConvention();
-            });
+            })
+            .AddScoped<DbContext>(sp => sp.GetRequiredService<DataContext>());;
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
