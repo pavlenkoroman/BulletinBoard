@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Board.Application.Exceptions;
 using Board.WebApi.ExceptionHandlers.Builder;
 
 namespace Board.WebApi.ExceptionHandlers.Factory;
@@ -17,7 +18,9 @@ internal class ExceptionResponseBuilderFactory(bool setStackTrace) : IExceptionR
         return exception switch
         {
             NotImplementedException => HttpStatusCode.NotImplemented,
-            ApplicationException => HttpStatusCode.BadRequest,
+            AlreadyExistsException => HttpStatusCode.Conflict,
+            LimitException => HttpStatusCode.Forbidden,
+            NotFoundException => HttpStatusCode.NotFound,
             ArgumentException => HttpStatusCode.BadRequest,
             _ => HttpStatusCode.InternalServerError
         };
