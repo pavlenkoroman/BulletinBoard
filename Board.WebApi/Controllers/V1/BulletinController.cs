@@ -14,7 +14,7 @@ namespace Board.WebApi.Controllers.V1;
 [Route("api/v1/[controller]")]
 public sealed class BulletinsController(IMediator mediator) : BaseV1Controller(mediator)
 {
-    [HttpPost("create")]
+    [HttpPost]
     public async Task<ActionResult<IdResponse>> Create(
         [FromForm] CreateBulletinRequest request,
         IFormFile photo,
@@ -30,7 +30,7 @@ public sealed class BulletinsController(IMediator mediator) : BaseV1Controller(m
         return new ObjectResult(new IdResponse(userId)) { StatusCode = StatusCodes.Status201Created };
     }
 
-    [HttpPut("update/{id:guid}")]
+    [HttpPut("{id:guid}")]
     public async Task<ActionResult<IdResponse>> Update(
         Guid id,
         [FromForm] UpdateBulletinRequest request,
@@ -49,7 +49,7 @@ public sealed class BulletinsController(IMediator mediator) : BaseV1Controller(m
         return new ObjectResult(new IdResponse(userId)) { StatusCode = StatusCodes.Status200OK };
     }
 
-    [HttpDelete("delete/{id:guid}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(
         Guid id,
         [FromBody] DeleteBulletinRequest request,
@@ -63,7 +63,7 @@ public sealed class BulletinsController(IMediator mediator) : BaseV1Controller(m
         return NoContent();
     }
 
-    [HttpGet("get_by_id/{id:guid}")]
+    [HttpGet("{id:guid}")]
     public async Task<ActionResult<BulletinResponse>> GetById(Guid id, CancellationToken cancellationToken = default)
     {
         var query = new GetBulletinByIdQuery(id);

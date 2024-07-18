@@ -11,7 +11,7 @@ namespace Board.WebApi.Controllers.V1;
 [Route("api/v1/[controller]")]
 public sealed class RatingController(IMediator mediator) : BaseV1Controller(mediator)
 {
-    [HttpPost("create")]
+    [HttpPost]
     public async Task<ActionResult<IdResponse>> Create(
         [FromBody] CreateRatingRequest request,
         CancellationToken cancellationToken = default)
@@ -30,7 +30,7 @@ public sealed class RatingController(IMediator mediator) : BaseV1Controller(medi
         return new ObjectResult(ratingCount) { StatusCode = StatusCodes.Status201Created };
     }
 
-    [HttpPut("update")]
+    [HttpPut]
     public async Task<ActionResult<IdResponse>> Update(
         [FromBody] UpdateRatingRequest request,
         CancellationToken cancellationToken = default)
@@ -52,7 +52,7 @@ public sealed class RatingController(IMediator mediator) : BaseV1Controller(medi
         return new ObjectResult(ratingCount) { StatusCode = StatusCodes.Status200OK };
     }
 
-    [HttpDelete("delete")]
+    [HttpDelete]
     public async Task<IActionResult> Delete(
         [FromBody] DeleteRatingRequest request,
         CancellationToken cancellationToken = default)

@@ -12,7 +12,7 @@ namespace Board.WebApi.Controllers.V1;
 [Route("api/v1/[controller]")]
 public class UsersController(IMediator mediator) : BaseV1Controller(mediator)
 {
-    [HttpPost("create")]
+    [HttpPost]
     public async Task<ActionResult<IdResponse>> Create(
         [FromBody] CreateUserRequest request,
         CancellationToken cancellationToken = default)
@@ -22,7 +22,7 @@ public class UsersController(IMediator mediator) : BaseV1Controller(mediator)
         return new ObjectResult(new IdResponse(userId)) { StatusCode = StatusCodes.Status201Created };
     }
 
-    [HttpPut("update/{id:guid}")]
+    [HttpPut("{id:guid}")]
     public async Task<ActionResult<IdResponse>> Update(
         Guid id,
         [FromBody] UpdateUserRequest request,
@@ -33,7 +33,7 @@ public class UsersController(IMediator mediator) : BaseV1Controller(mediator)
         return new ObjectResult(new IdResponse(userId)) { StatusCode = StatusCodes.Status200OK };
     }
 
-    [HttpDelete("delete/{id:guid}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(
         Guid id,
         CancellationToken cancellationToken = default)
@@ -44,7 +44,7 @@ public class UsersController(IMediator mediator) : BaseV1Controller(mediator)
         return NoContent();
     }
 
-    [HttpGet("get_by_id/{id:guid}")]
+    [HttpGet("{id:guid}")]
     public async Task<ActionResult<UserResponse>> GetById(Guid id, CancellationToken cancellationToken = default)
     {
         var query = new GetUserByIdQuery(id);
