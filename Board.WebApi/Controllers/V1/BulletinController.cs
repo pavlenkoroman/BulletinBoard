@@ -1,7 +1,7 @@
-﻿using Board.Application.Models.Bulletins;
-using Board.Application.Models.Bulletins.Commands;
-using Board.Application.Models.Bulletins.Queries;
-using Board.Application.Models.Search;
+﻿using Board.Application.Bulletins.Models;
+using Board.Application.Bulletins.Models.Commands;
+using Board.Application.Bulletins.Models.Queries;
+using Board.Application.Models;
 using Board.Application.Services.Files.Models;
 using Board.Contract.Requests.Bulletin;
 using Board.Contract.Responses;

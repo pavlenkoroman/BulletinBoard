@@ -1,7 +1,7 @@
-﻿using Board.Application.Exceptions;
-using Board.Application.Models.Bulletins;
-using Board.Application.Models.Bulletins.Queries;
-using Board.Application.Models.Search;
+﻿using Board.Application.Bulletins.Models;
+using Board.Application.Bulletins.Models.Queries;
+using Board.Application.Exceptions;
+using Board.Application.Models;
 using Board.Application.Repositories;
 using Board.Domain;
 using Board.Infrastructure.Context;

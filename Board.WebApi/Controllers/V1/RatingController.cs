@@ -1,4 +1,4 @@
-﻿using Board.Application.Models.Rating.Commands;
+﻿using Board.Application.Ratings.Models.Commands;
 using Board.Contract.Requests.Rating;
 using Board.Contract.Responses;
 using Board.Contract.Transfers;

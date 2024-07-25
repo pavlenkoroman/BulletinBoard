@@ -1,5 +1,5 @@
-﻿using Board.Application.Models.Search;
-using Board.Application.Models.Users.Queries;
+﻿using Board.Application.Models;
+using Board.Application.Users.Models.Queries;
 using Board.Domain;
 
 namespace Board.Application.Repositories;

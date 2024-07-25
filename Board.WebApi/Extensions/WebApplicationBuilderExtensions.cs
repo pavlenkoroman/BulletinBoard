@@ -1,7 +1,7 @@
-﻿using Board.Application.CommandHandlers.Users;
-using Board.Application.Options;
+﻿using Board.Application.Options;
 using Board.Application.Repositories;
 using Board.Application.Services.Files.Services;
+using Board.Application.Users.CommandHandlers;
 using Board.Infrastructure.Context;
 using Board.Infrastructure.Repositories;
 using Board.Infrastructure.Services.Files;
@@ -32,7 +32,7 @@ internal static class WebApplicationBuilderExtensions
 
                 options.UseSnakeCaseNamingConvention();
             })
-            .AddScoped<DbContext>(sp => sp.GetRequiredService<DataContext>());;
+            .AddScoped<DbContext>(sp => sp.GetRequiredService<DataContext>());
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

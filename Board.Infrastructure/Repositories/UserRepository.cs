@@ -1,8 +1,8 @@
 ﻿using Board.Application.Exceptions;
-using Board.Application.Models.Search;
-using Board.Application.Models.Users;
-using Board.Application.Models.Users.Queries;
+using Board.Application.Models;
 using Board.Application.Repositories;
+using Board.Application.Users.Models;
+using Board.Application.Users.Models.Queries;
 using Board.Domain;
 using Board.Infrastructure.Context;
 using Board.Infrastructure.Extensions;

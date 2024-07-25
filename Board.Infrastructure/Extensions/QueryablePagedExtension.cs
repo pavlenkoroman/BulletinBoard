@@ -1,4 +1,4 @@
-﻿using Board.Application.Models.Search;
+﻿using Board.Application.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Board.Infrastructure.Extensions;
