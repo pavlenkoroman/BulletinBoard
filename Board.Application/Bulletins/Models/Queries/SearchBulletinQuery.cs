@@ -6,20 +6,20 @@ namespace Board.Application.Bulletins.Models.Queries;
 
 public sealed record SearchBulletinQuery : BaseSearchRequest, IRequest<SearchResult<Bulletin>>
 {
-    public IntegerRange? NumberRange { get; private init; }
+    public Range<int>? NumberRange { get; private init; }
     public Guid? UserId { get; private init; }
-    public IntegerRange? RatingRange { get; private init; }
-    public DateTimeRange? CreatedDateRange { get; private init; }
-    public DateTimeRange? ExpirationDateRange { get; private init; }
+    public Range<int>? RatingRange { get; private init; }
+    public Range<DateTime>? CreatedDateRange { get; private init; }
+    public Range<DateTime>? ExpirationDateRange { get; private init; }
     public BulletinSortBy? SortBy { get; private init; }
     public SearchBulletinQuery(
         Page page,
         string? query,
-        IntegerRange? numberRange,
+        Range<int>? numberRange,
         Guid? userId,
-        IntegerRange? ratingRange,
-        DateTimeRange? createdDateRange,
-        DateTimeRange? expirationDateRange,
+        Range<int>? ratingRange,
+        Range<DateTime>? createdDateRange,
+        Range<DateTime>? expirationDateRange,
         BulletinSortBy? sortBy)
         : base(page, query)
     {

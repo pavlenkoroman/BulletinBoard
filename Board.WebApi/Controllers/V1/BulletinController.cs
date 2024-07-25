@@ -106,11 +106,11 @@ public sealed class BulletinsController(IMediator mediator) : BaseV1Controller(m
         var queryModel = new SearchBulletinQuery(
             new Page(page, pageSize),
             query,
-            new IntegerRange(numberRangeStart, numberRangeEnd),
+            new Range<int>(numberRangeStart, numberRangeEnd),
             userId,
-            new IntegerRange(ratingRangeStart, ratingRangeEnd),
-            new DateTimeRange(createdDateStart, createdDateEnd),
-            new DateTimeRange(expirationDateStart, expirationDateEnd),
+            new Range<int>(ratingRangeStart, ratingRangeEnd),
+            new Range<DateTime>(createdDateStart, createdDateEnd),
+            new Range<DateTime>(expirationDateStart, expirationDateEnd),
             sortBy switch {
                 BulletinSortByTransfer.Number => BulletinSortBy.Number,
                 BulletinSortByTransfer.Text => BulletinSortBy.Text,
