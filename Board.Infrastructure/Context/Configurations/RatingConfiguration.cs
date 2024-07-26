@@ -15,13 +15,13 @@ public class RatingConfiguration : IEntityTypeConfiguration<Rating>
 
         builder
             .HasOne<User>()
-            .WithOne()
-            .HasForeignKey<Rating>(rating => rating.UserId);
+            .WithMany()
+            .HasForeignKey(rating => rating.UserId);
 
         builder
             .HasOne<Bulletin>()
-            .WithOne()
-            .HasForeignKey<Rating>(rating => rating.BulletinId);
+            .WithMany()
+            .HasForeignKey(rating => rating.BulletinId);
 
         builder
             .ToTable("ratings");
