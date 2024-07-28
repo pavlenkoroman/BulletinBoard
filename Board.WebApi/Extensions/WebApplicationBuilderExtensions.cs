@@ -44,7 +44,7 @@ internal static class WebApplicationBuilderExtensions
         builder.Services.AddImageService(builder.Configuration);
         builder.Services.AddBoardOptions(builder.Configuration);
 
-        builder.Services.AddQuartzServices(builder.Configuration);
+        builder.Services.AddQuartzServices();
 
         builder.Services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
 
@@ -79,7 +79,7 @@ internal static class WebApplicationBuilderExtensions
             provider => provider.GetRequiredService<IOptions<BoardOption>>().Value);
     }
 
-    private static void AddQuartzServices(this IServiceCollection services, IConfiguration configuration)
+    private static void AddQuartzServices(this IServiceCollection services)
     {
         services.AddScoped<BulletinExpirationJob>();
         services.AddQuartz(configurator =>
