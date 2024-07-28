@@ -8,6 +8,11 @@
 
     <ItemGroup>
         <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+        <PackageReference Include="Quartz" Version="3.11.0" />
+        <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.11.0" />
+        <PackageReference Include="Quartz.Extensions.Hosting" Version="3.11.0" />
+        <PackageReference Include="Quartz.Serialization.SystemTextJson" Version="3.11.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
 
@@ -39,6 +44,10 @@
       <None Remove="Uploads\Original\istockphoto-825383494-612x612_1d4bc1e5-ef00-4164-9b04-7412b4149933.jpg" />
       <None Remove="Uploads\Original\istockphoto-825383494-612x612_1b49729e-710b-459d-b2b7-09a8134740f4.jpg" />
       <None Remove="Uploads\Original\istockphoto-825383494-612x612_0297a71e-fca7-4494-b34c-54a2575a629e.jpg" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Options\QuartzOption.cs" />
     </ItemGroup>
 
 </Project>

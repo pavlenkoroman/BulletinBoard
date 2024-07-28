@@ -3,6 +3,7 @@ using Board.Application.Repositories;
 using Board.Application.Services.Files.Services;
 using Board.Application.Users.CommandHandlers;
 using Board.Infrastructure.Context;
+using Board.Infrastructure.Jobs;
 using Board.Infrastructure.Repositories;
 using Board.Infrastructure.Services.Files;
 using Board.WebApi.ExceptionHandlers;
@@ -11,6 +12,7 @@ using Board.WebApi.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Npgsql;
+using Quartz;
 
 namespace Board.WebApi.Extensions;
 
@@ -41,6 +43,8 @@ internal static class WebApplicationBuilderExtensions
 
         builder.Services.AddImageService(builder.Configuration);
         builder.Services.AddBoardOptions(builder.Configuration);
+
+        builder.Services.AddQuartzServices(builder.Configuration);
 
         builder.Services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
 
@@ -73,5 +77,16 @@ internal static class WebApplicationBuilderExtensions
             .Bind(configuration.GetSection(BoardOption.Name));
         services.AddScoped<IBoardOption>(
             provider => provider.GetRequiredService<IOptions<BoardOption>>().Value);
+    }
+
+    private static void AddQuartzServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped<BulletinExpirationJob>();
+        services.AddQuartz(configurator =>
+        {
+            configurator.UseInMemoryStore();
+            configurator.ScheduleDeactivatingExpiredBulletins();
+        });
+        services.AddQuartzHostedService(options => { options.WaitForJobsToComplete = true; });
     }
 }

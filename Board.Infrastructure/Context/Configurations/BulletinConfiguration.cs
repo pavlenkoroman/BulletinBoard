@@ -27,6 +27,10 @@ public class BulletinConfiguration : IEntityTypeConfiguration<Bulletin>
             .HasColumnType("jsonb");
 
         builder
+            .Property(bulletin => bulletin.IsActive)
+            .HasDefaultValue(true);
+
+        builder
             .HasIndex(bulletin => bulletin.Number);
 
         builder

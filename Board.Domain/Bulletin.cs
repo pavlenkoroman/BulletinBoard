@@ -8,6 +8,7 @@ public sealed class Bulletin
     public string Text { get; private set; }
     public Photo Photo { get; private set; }
     public int Rating { get; private set; }
+    public bool IsActive { get; private set; }
     public DateTime CreatedDate { get; private init; }
     public DateTime ExpirationDate { get; private init; }
 
@@ -18,6 +19,7 @@ public sealed class Bulletin
         string text,
         Photo photo,
         int rating,
+        bool isActive,
         DateTime createdDate,
         DateTime expirationDate)
     {
@@ -40,6 +42,7 @@ public sealed class Bulletin
         Text = text;
         Photo = photo;
         Rating = rating;
+        IsActive = isActive;
         CreatedDate = createdDate;
         ExpirationDate = expirationDate;
     }
@@ -57,6 +60,7 @@ public sealed class Bulletin
             text,
             photo,
             0,
+            true,
             DateTime.UtcNow,
             DateTime.UtcNow.AddDays(expirationDays));
     }
@@ -70,6 +74,11 @@ public sealed class Bulletin
     public void UpdatePhoto(Photo photo)
     {
         Photo = photo;
+    }
+
+    public void UpdateIsActive(bool isActive)
+    {
+        IsActive = isActive;
     }
 
     private void ValidateText(string text)

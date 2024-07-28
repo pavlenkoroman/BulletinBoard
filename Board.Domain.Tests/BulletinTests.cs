@@ -45,7 +45,16 @@ public class BulletinTests
         DateTime expirationDate)
     {
         // Arrange & Act
-        var action = () => new Bulletin(id, number, userId, text, photo, rating, createdDate, expirationDate);
+        var action = () => new Bulletin(
+            id, 
+            number, 
+            userId, 
+            text, 
+            photo, 
+            rating, 
+            true, 
+            createdDate, 
+            expirationDate);
 
         // Assert
         action.Should().Throw<ArgumentOutOfRangeException>();
