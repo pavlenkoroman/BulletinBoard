@@ -75,6 +75,8 @@ public class BulletinRepository : IBulletinRepository
     {
         var queryable = _dbContext.Set<Bulletin>().AsQueryable();
 
+        queryable = queryable.Where(bulletin => bulletin.IsActive);
+
         if (!string.IsNullOrWhiteSpace(query.Query))
         {
             queryable = queryable.Where(bulletin => EF.Functions.ILike(bulletin.Text, $"%{query.Query}%"));
