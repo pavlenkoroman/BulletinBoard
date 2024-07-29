@@ -19,13 +19,6 @@ public class BulletinExpirationJob : IJob
         using var cancellationTokenSource = new CancellationTokenSource();
         var tenant = _tenantRepositoryFactory.GetTenant();
 
-        var bulletinsToDeactivate = await tenant.Bulletins.GetExpired(cancellationTokenSource.Token);
-
-        foreach (var bulletin in bulletinsToDeactivate)
-        {
-            bulletin.UpdateIsActive(false);
-        }
-
-        await tenant.UnitOfWork.CommitAsync(cancellationTokenSource.Token);
+        await tenant.Bulletins.DeactivateExpired(cancellationTokenSource.Token);
     }
 }

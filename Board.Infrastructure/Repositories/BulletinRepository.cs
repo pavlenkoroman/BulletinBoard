@@ -56,12 +56,13 @@ public class BulletinRepository : IBulletinRepository
             .CountAsync(bulletin => bulletin.UserId == currentUserId, cancellationToken);
     }
 
-    public async Task<IReadOnlyCollection<Bulletin>> GetExpired(CancellationToken cancellationToken)
+    public async Task DeactivateExpired(CancellationToken cancellationToken)
     {
-        return await _dbContext
+        await _dbContext
             .Set<Bulletin>()
             .Where(bulletin => bulletin.ExpirationDate <= DateTime.UtcNow)
-            .ToArrayAsync(cancellationToken);
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(bulletin => bulletin.IsActive, false), cancellationToken);
     }
 
     public void Delete(Bulletin bulletin)

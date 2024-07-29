@@ -11,7 +11,7 @@ public interface IBulletinRepository
     Task<Bulletin> GetById(Guid bulletinId, CancellationToken cancellationToken);
     Task<Bulletin> GetByUserId(Guid currentUserId, Guid bulletinId, CancellationToken cancellationToken);
     Task<int> GetCountByUserId(Guid currentUserId, CancellationToken cancellationToken);
-    Task<IReadOnlyCollection<Bulletin>> GetExpired(CancellationToken cancellationToken);
+    Task DeactivateExpired(CancellationToken cancellationToken);
     void Delete(Bulletin bulletin);
     Task<SearchResult<Bulletin>> Search(SearchBulletinQuery query, CancellationToken cancellationToken);
 }
