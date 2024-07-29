@@ -4,6 +4,7 @@ using Board.Application.Options;
 using Board.Application.Repositories;
 using Board.Application.Services.Files.Services;
 using Board.Domain;
+using Board.Domain.Exceptions;
 using MediatR;
 
 namespace Board.Application.Bulletins.CommandHandlers;

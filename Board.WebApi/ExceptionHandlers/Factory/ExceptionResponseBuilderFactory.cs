@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Board.Application.Exceptions;
+using Board.Domain.Exceptions;
 using Board.WebApi.ExceptionHandlers.Builder;
 
 namespace Board.WebApi.ExceptionHandlers.Factory;
