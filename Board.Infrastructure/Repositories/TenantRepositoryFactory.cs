@@ -3,20 +3,20 @@ using Board.Infrastructure.Context;
 
 namespace Board.Infrastructure.Repositories;
 
-public class UnitOfWorkFactory : IUnitOfWorkFactory
+public class TenantRepositoryFactory : ITenantRepositoryFactory
 {
     private readonly DataContext _dbContext;
-    private IUnitOfWork? _unitOfWork;
+    private ITenantRepository? _unitOfWork;
 
-    public UnitOfWorkFactory(DataContext dbContext)
+    public TenantRepositoryFactory(DataContext dbContext)
     {
         ArgumentNullException.ThrowIfNull(dbContext);
 
         _dbContext = dbContext;
     }
 
-    public IUnitOfWork GetUnitOfWork()
+    public ITenantRepository GetTenant()
     {
-        return _unitOfWork ??= new UnitOfWork(_dbContext);
+        return _unitOfWork ??= new TenantRepository(_dbContext);
     }
 }

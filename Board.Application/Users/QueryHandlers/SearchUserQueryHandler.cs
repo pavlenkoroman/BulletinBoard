@@ -8,21 +8,21 @@ namespace Board.Application.Users.QueryHandlers;
 
 public class SearchUserQueryHandler : IRequestHandler<SearchUserQuery, SearchResult<User>>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
 
-    public SearchUserQueryHandler(IUnitOfWorkFactory unitOfWorkFactory)
+    public SearchUserQueryHandler(ITenantRepositoryFactory tenantRepositoryFactory)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
     }
 
     public async Task<SearchResult<User>> Handle(SearchUserQuery request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
-        return await unitOfWork.Users.Search(request, cancellationToken);
+        return await tenant.Users.Search(request, cancellationToken);
     }
 }

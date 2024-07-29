@@ -9,23 +9,23 @@ namespace Board.Application.Ratings.CommandHandlers;
 
 public sealed record CreateRatingCommandHandler : IRequestHandler<CreateRatingCommand, int>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
 
-    public CreateRatingCommandHandler(IUnitOfWorkFactory unitOfWorkFactory)
+    public CreateRatingCommandHandler(ITenantRepositoryFactory tenantRepositoryFactory)
     {
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
     }
 
     public async Task<int> Handle(CreateRatingCommand request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
-        var currentUser = await unitOfWork.Users.GetById(request.CurrentUserId, cancellationToken);
-        var bulletin = await unitOfWork.Bulletins.GetById(request.BulletinId, cancellationToken);
+        var currentUser = await tenant.Users.GetById(request.CurrentUserId, cancellationToken);
+        var bulletin = await tenant.Bulletins.GetById(request.BulletinId, cancellationToken);
 
-        var rating = await unitOfWork.Bulletins.Rating.TryGetRating(currentUser, bulletin, cancellationToken);
+        var rating = await tenant.Bulletins.Rating.TryGetRating(currentUser, bulletin, cancellationToken);
 
         if (rating is not null)
         {
@@ -34,8 +34,8 @@ public sealed record CreateRatingCommandHandler : IRequestHandler<CreateRatingCo
 
         rating = Rating.Create(currentUser, bulletin, request.RatingType);
 
-        await unitOfWork.ExecuteInTransactionAsync(
-            async () => await unitOfWork.Bulletins.Rating.Add(rating, bulletin, cancellationToken),
+        await tenant.UnitOfWork.ExecuteInTransactionAsync(
+            async () => await tenant.Bulletins.Rating.Add(rating, bulletin, cancellationToken),
             IsolationLevel.RepeatableRead,
             cancellationToken);
 

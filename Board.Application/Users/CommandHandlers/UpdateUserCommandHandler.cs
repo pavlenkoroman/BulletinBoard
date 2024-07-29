@@ -6,26 +6,26 @@ namespace Board.Application.Users.CommandHandlers;
 
 public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Guid>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
 
-    public UpdateUserCommandHandler(IUnitOfWorkFactory unitOfWorkFactory)
+    public UpdateUserCommandHandler(ITenantRepositoryFactory tenantRepositoryFactory)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
     }
 
     public async Task<Guid> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
-        var user = await unitOfWork.Users.GetById(request.UserId, cancellationToken);
+        var user = await tenant.Users.GetById(request.UserId, cancellationToken);
 
         user.UpdateName(request.Name);
 
-        await unitOfWork.CommitAsync(cancellationToken);
+        await tenant.UnitOfWork.CommitAsync(cancellationToken);
 
         return user.Id;
     }

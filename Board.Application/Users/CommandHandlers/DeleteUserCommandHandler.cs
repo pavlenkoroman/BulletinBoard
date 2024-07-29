@@ -6,24 +6,24 @@ namespace Board.Application.Users.CommandHandlers;
 
 public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
 
-    public DeleteUserCommandHandler(IUnitOfWorkFactory unitOfWorkFactory)
+    public DeleteUserCommandHandler(ITenantRepositoryFactory tenantRepositoryFactory)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
     }
 
     public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
-        var user = await unitOfWork.Users.GetById(request.UserId, cancellationToken);
-        unitOfWork.Users.Delete(user);
+        var user = await tenant.Users.GetById(request.UserId, cancellationToken);
+        tenant.Users.Delete(user);
 
-        await unitOfWork.CommitAsync(cancellationToken);
+        await tenant.UnitOfWork.CommitAsync(cancellationToken);
     }
 }

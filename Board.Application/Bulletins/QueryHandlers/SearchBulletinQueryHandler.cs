@@ -8,21 +8,21 @@ namespace Board.Application.Bulletins.QueryHandlers;
 
 public sealed class SearchBulletinQueryHandler : IRequestHandler<SearchBulletinQuery, SearchResult<Bulletin>>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
 
-    public SearchBulletinQueryHandler(IUnitOfWorkFactory unitOfWorkFactory)
+    public SearchBulletinQueryHandler(ITenantRepositoryFactory tenantRepositoryFactory)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
     }
 
     public async Task<SearchResult<Bulletin>> Handle(SearchBulletinQuery request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
-        return await unitOfWork.Bulletins.Search(request, cancellationToken);
+        return await tenant.Bulletins.Search(request, cancellationToken);
     }
 }

@@ -46,7 +46,7 @@ internal static class WebApplicationBuilderExtensions
 
         builder.Services.AddQuartzServices();
 
-        builder.Services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
+        builder.Services.AddScoped<ITenantRepositoryFactory, TenantRepositoryFactory>();
 
         builder.Services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(CreateUserCommandHandler).Assembly));

@@ -7,15 +7,15 @@ namespace Board.Application.Bulletins.CommandHandlers;
 
 public class UpdateBulletinCommandHandler : IRequestHandler<UpdateBulletinCommand, Guid>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
     private readonly IPhotoService _photoService;
 
-    public UpdateBulletinCommandHandler(IUnitOfWorkFactory unitOfWorkFactory, IPhotoService photoService)
+    public UpdateBulletinCommandHandler(ITenantRepositoryFactory tenantRepositoryFactory, IPhotoService photoService)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
         ArgumentNullException.ThrowIfNull(photoService);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
         _photoService = photoService;
     }
 
@@ -23,9 +23,9 @@ public class UpdateBulletinCommandHandler : IRequestHandler<UpdateBulletinComman
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
-        var bulletin = await unitOfWork.Bulletins
+        var bulletin = await tenant.Bulletins
             .GetByUserId(request.CurrentUserId, request.BulletinId, cancellationToken);
 
         if (request.Text is not null)
@@ -43,7 +43,7 @@ public class UpdateBulletinCommandHandler : IRequestHandler<UpdateBulletinComman
 
         try
         {
-            await unitOfWork.CommitAsync(cancellationToken);
+            await tenant.UnitOfWork.CommitAsync(cancellationToken);
         }
         catch (Exception)
         {

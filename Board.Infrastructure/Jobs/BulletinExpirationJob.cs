@@ -5,27 +5,27 @@ namespace Board.Infrastructure.Jobs;
 
 public class BulletinExpirationJob : IJob
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
 
-    public BulletinExpirationJob(IUnitOfWorkFactory unitOfWorkFactory)
+    public BulletinExpirationJob(ITenantRepositoryFactory tenantRepositoryFactory)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
     }
 
     public async Task Execute(IJobExecutionContext context)
     {
         using var cancellationTokenSource = new CancellationTokenSource();
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
-        var bulletinsToDeactivate = await unitOfWork.Bulletins.GetExpired(cancellationTokenSource.Token);
+        var bulletinsToDeactivate = await tenant.Bulletins.GetExpired(cancellationTokenSource.Token);
 
         foreach (var bulletin in bulletinsToDeactivate)
         {
             bulletin.UpdateIsActive(false);
         }
 
-        await unitOfWork.CommitAsync(cancellationTokenSource.Token);
+        await tenant.UnitOfWork.CommitAsync(cancellationTokenSource.Token);
     }
 }

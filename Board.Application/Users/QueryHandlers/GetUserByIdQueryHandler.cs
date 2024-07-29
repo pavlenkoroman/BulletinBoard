@@ -7,21 +7,21 @@ namespace Board.Application.Users.QueryHandlers;
 
 public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
 
-    public GetUserByIdQueryHandler(IUnitOfWorkFactory unitOfWorkFactory)
+    public GetUserByIdQueryHandler(ITenantRepositoryFactory tenantRepositoryFactory)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
     }
 
     public async Task<User> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
-        return await unitOfWork.Users.GetById(request.UserId, cancellationToken);
+        return await tenant.Users.GetById(request.UserId, cancellationToken);
     }
 }

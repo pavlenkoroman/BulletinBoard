@@ -8,25 +8,25 @@ namespace Board.Application.Ratings.CommandHandlers;
 
 public class UpdateRatingCommandHandler : IRequestHandler<UpdateRatingCommand, int>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
 
-    public UpdateRatingCommandHandler(IUnitOfWorkFactory unitOfWorkFactory)
+    public UpdateRatingCommandHandler(ITenantRepositoryFactory tenantRepositoryFactory)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
     }
 
     public async Task<int> Handle(UpdateRatingCommand request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
-        var currentUser = await unitOfWork.Users.GetById(request.CurrentUserId, cancellationToken);
-        var bulletin = await unitOfWork.Bulletins.GetById(request.BulletinId, cancellationToken);
+        var currentUser = await tenant.Users.GetById(request.CurrentUserId, cancellationToken);
+        var bulletin = await tenant.Bulletins.GetById(request.BulletinId, cancellationToken);
 
-        var rating = await unitOfWork.Bulletins.Rating.TryGetRating(currentUser, bulletin, cancellationToken);
+        var rating = await tenant.Bulletins.Rating.TryGetRating(currentUser, bulletin, cancellationToken);
 
         if (rating is null)
         {
@@ -38,12 +38,10 @@ public class UpdateRatingCommandHandler : IRequestHandler<UpdateRatingCommand, i
             throw AlreadyExistsException.CreateByExistingRating(rating.UserId, rating.BulletinId, rating.RatingType);
         }
 
-        await unitOfWork.ExecuteInTransactionAsync(
-            async () => await unitOfWork.Bulletins.Rating.SwitchRatingType(rating, bulletin, cancellationToken),
+        await tenant.UnitOfWork.ExecuteInTransactionAsync(
+            async () => await tenant.Bulletins.Rating.SwitchRatingType(rating, bulletin, cancellationToken),
             IsolationLevel.RepeatableRead,
             cancellationToken);
-
-        await unitOfWork.CommitAsync(cancellationToken);
 
         return bulletin.Rating;
     }

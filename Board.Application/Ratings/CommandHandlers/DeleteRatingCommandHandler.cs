@@ -7,33 +7,33 @@ namespace Board.Application.Ratings.CommandHandlers;
 
 public sealed class DeleteRatingCommandHandler : IRequestHandler<DeleteRatingCommand, int>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
 
-    public DeleteRatingCommandHandler(IUnitOfWorkFactory unitOfWorkFactory)
+    public DeleteRatingCommandHandler(ITenantRepositoryFactory tenantRepositoryFactory)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
     }
 
     public async Task<int> Handle(DeleteRatingCommand request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
-        var currentUser = await unitOfWork.Users.GetById(request.CurrentUserId, cancellationToken);
-        var bulletin = await unitOfWork.Bulletins.GetById(request.BulletinId, cancellationToken);
+        var currentUser = await tenant.Users.GetById(request.CurrentUserId, cancellationToken);
+        var bulletin = await tenant.Bulletins.GetById(request.BulletinId, cancellationToken);
 
-        var rating = await unitOfWork.Bulletins.Rating.TryGetRating(currentUser, bulletin, cancellationToken);
+        var rating = await tenant.Bulletins.Rating.TryGetRating(currentUser, bulletin, cancellationToken);
 
         if (rating is null)
         {
             return bulletin.Rating;
         }
 
-        await unitOfWork.ExecuteInTransactionAsync(
-            async () => await unitOfWork.Bulletins.Rating.Remove(rating, bulletin, cancellationToken),
+        await tenant.UnitOfWork.ExecuteInTransactionAsync(
+            async () => await tenant.Bulletins.Rating.Remove(rating, bulletin, cancellationToken),
             IsolationLevel.RepeatableRead,
             cancellationToken);
 

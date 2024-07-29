@@ -7,15 +7,15 @@ namespace Board.Application.Bulletins.CommandHandlers;
 
 public sealed class DeleteBulletinCommandHandler : IRequestHandler<DeleteBulletinCommand>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
     private readonly IPhotoService _photoService;
 
-    public DeleteBulletinCommandHandler(IUnitOfWorkFactory unitOfWorkFactory, IPhotoService photoService)
+    public DeleteBulletinCommandHandler(ITenantRepositoryFactory tenantRepositoryFactory, IPhotoService photoService)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
         ArgumentNullException.ThrowIfNull(photoService);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
         _photoService = photoService;
     }
 
@@ -23,18 +23,18 @@ public sealed class DeleteBulletinCommandHandler : IRequestHandler<DeleteBulleti
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
-        var currentUserBulletin = await unitOfWork.Bulletins.GetByUserId(
+        var currentUserBulletin = await tenant.Bulletins.GetByUserId(
             request.CurrentUserId,
             request.BulletinId,
             cancellationToken);
 
         var photo = currentUserBulletin.Photo;
 
-        unitOfWork.Bulletins.Delete(currentUserBulletin);
+        tenant.Bulletins.Delete(currentUserBulletin);
 
-        await unitOfWork.CommitAsync(cancellationToken);
+        await tenant.UnitOfWork.CommitAsync(cancellationToken);
 
         await _photoService.DeleteFile(photo, cancellationToken);
     }

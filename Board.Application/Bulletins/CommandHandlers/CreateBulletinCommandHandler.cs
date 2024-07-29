@@ -11,31 +11,31 @@ namespace Board.Application.Bulletins.CommandHandlers;
 
 public class CreateBulletinCommandHandler : IRequestHandler<CreateBulletinCommand, Guid>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
     private readonly IPhotoService _photoService;
     private readonly IBoardOption _boardOption;
 
     public CreateBulletinCommandHandler(
-        IUnitOfWorkFactory unitOfWorkFactory,
+        ITenantRepositoryFactory tenantRepositoryFactory,
         IPhotoService photoService,
         IBoardOption boardOption)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
         ArgumentNullException.ThrowIfNull(photoService);
         ArgumentNullException.ThrowIfNull(boardOption);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
         _photoService = photoService;
         _boardOption = boardOption;
     }
 
     public async Task<Guid> Handle(CreateBulletinCommand request, CancellationToken cancellationToken)
     {
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
         var filePath = await _photoService.UploadFile(request.File, cancellationToken);
 
-        var currentUserBulletins = await unitOfWork.Bulletins.GetCountByUserId(request.UserId, cancellationToken);
+        var currentUserBulletins = await tenant.Bulletins.GetCountByUserId(request.UserId, cancellationToken);
 
         if (currentUserBulletins == _boardOption.MaxBulletinsPerUser)
         {
@@ -44,8 +44,8 @@ public class CreateBulletinCommandHandler : IRequestHandler<CreateBulletinComman
 
         var bulletin = Bulletin.Create(0, request.UserId, request.Text, filePath, _boardOption.BulletinsExpirationDays);
 
-        await unitOfWork.Bulletins.Create(bulletin, cancellationToken);
-        await unitOfWork.CommitAsync(cancellationToken);
+        await tenant.Bulletins.Create(bulletin, cancellationToken);
+        await tenant.UnitOfWork.CommitAsync(cancellationToken);
 
         return bulletin.Id;
     }

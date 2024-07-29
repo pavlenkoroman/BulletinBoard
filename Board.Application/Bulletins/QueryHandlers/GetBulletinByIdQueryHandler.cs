@@ -7,21 +7,21 @@ namespace Board.Application.Bulletins.QueryHandlers;
 
 public class GetBulletinByIdQueryHandler : IRequestHandler<GetBulletinByIdQuery, Bulletin>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
 
-    public GetBulletinByIdQueryHandler(IUnitOfWorkFactory unitOfWorkFactory)
+    public GetBulletinByIdQueryHandler(ITenantRepositoryFactory tenantRepositoryFactory)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
     }
 
     public async Task<Bulletin> Handle(GetBulletinByIdQuery request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
-        return await unitOfWork.Bulletins.GetById(request.BulletinId, cancellationToken);
+        return await tenant.Bulletins.GetById(request.BulletinId, cancellationToken);
     }
 }

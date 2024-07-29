@@ -7,26 +7,26 @@ namespace Board.Application.Users.CommandHandlers;
 
 public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
 {
-    private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+    private readonly ITenantRepositoryFactory _tenantRepositoryFactory;
 
-    public CreateUserCommandHandler(IUnitOfWorkFactory unitOfWorkFactory)
+    public CreateUserCommandHandler(ITenantRepositoryFactory tenantRepositoryFactory)
     {
-        ArgumentNullException.ThrowIfNull(unitOfWorkFactory);
+        ArgumentNullException.ThrowIfNull(tenantRepositoryFactory);
 
-        _unitOfWorkFactory = unitOfWorkFactory;
+        _tenantRepositoryFactory = tenantRepositoryFactory;
     }
 
     public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var unitOfWork = _unitOfWorkFactory.GetUnitOfWork();
+        var tenant = _tenantRepositoryFactory.GetTenant();
 
         var user = User.Create(request.Name, request.IsAdmin);
 
-        await unitOfWork.Users.Create(user, cancellationToken).ConfigureAwait(false);
+        await tenant.Users.Create(user, cancellationToken).ConfigureAwait(false);
 
-        await unitOfWork.CommitAsync(cancellationToken);
+        await tenant.UnitOfWork.CommitAsync(cancellationToken);
 
         return user.Id;
     }
